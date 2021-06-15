@@ -37,8 +37,8 @@ paths:
         name: id
         required: true
         schema:
-          type: integer
-          example: 123456789
+          type: string
+          example: 11841bdbe53e43bca404d7431afc72d1
     get:
       description: "Get the details of a particular film using the film ID."
       responses:
@@ -61,7 +61,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Reservation"
-            example: { "filmId": "12345", "reservationDays": 5 }
+            example:
+              {
+                "filmId": "11841bdbe53e43bca404d7431afc72d1",
+                "reservationDays": 5
+              }
       responses:
         "201":
           description: "Reservation created successfully."
@@ -71,8 +75,8 @@ paths:
                 $ref: "#/components/schemas/Reservation"
               example:
                 {
-                  "id": "987654",
-                  "filmId": "12345",
+                  "id": "11841bdbe53e43bca404d7431afc72d1",
+                  "filmId": "206c51b116b649f89b69d83f7118bd5b",
                   "status": "OPEN",
                   "reservationDays": 5,
                   "reservationStartDate": "2017-07-21",
@@ -106,8 +110,8 @@ paths:
                 ReturnedOnExpectedDate:
                   value:
                     {
-                      "id": "987654",
-                      "filmId": "12345",
+                      "id": "11841bdbe53e43bca404d7431afc72d1",
+                      "filmId": "206c51b116b649f89b69d83f7118bd5b",
                       "status": "CLOSED",
                       "reservationDays": 5,
                       "reservationStartDate": "2017-07-21",
@@ -119,8 +123,8 @@ paths:
                 ReturnedAfterExpectedDate:
                   value:
                     {
-                      "id": "987654",
-                      "filmId": "12345",
+                      "id": "11841bdbe53e43bca404d7431afc72d1",
+                      "filmId": "206c51b116b649f89b69d83f7118bd5b",
                       "status": "SURCHARGE_REQUIRED",
                       "reservationDays": 5,
                       "reservationStartDate": "2017-07-21",
@@ -147,9 +151,9 @@ components:
       properties:
         id:
           description: "Unique entity ID."
-          type: integer
+          type: string
           readOnly: true
-          example: 123456789
+          example: 11841bdbe53e43bca404d7431afc72d1
         name:
           description: "The film name"
           type: string
@@ -171,13 +175,13 @@ components:
       properties:
         id:
           description: "Unique entity ID."
-          type: integer
+          type: string
           readOnly: true
-          example: 123456789
+          example: 11841bdbe53e43bca404d7431afc72d1
         filmId:
           description: "The ID of the film reserved."
-          type: integer
-          example: 123456789
+          type: string
+          example: 206c51b116b649f89b69d83f7118bd5b
         status:
           description: "Determines whether the reservation is still open (i.e. film not returned) or no"
           type: string

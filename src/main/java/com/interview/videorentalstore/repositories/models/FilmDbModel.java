@@ -1,18 +1,24 @@
 package com.interview.videorentalstore.repositories.models;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity(name = "FILMS")
 public class FilmDbModel {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
+    private UUID id;
     private String name;
     private String filmType;
     private Boolean available;
@@ -20,18 +26,18 @@ public class FilmDbModel {
     public FilmDbModel() {
     }
 
-    public FilmDbModel(Integer id, String name, String filmType, Boolean available) {
+    public FilmDbModel(UUID id, String name, String filmType, Boolean available) {
         this.id = id;
         this.name = name;
         this.filmType = filmType;
         this.available = available;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

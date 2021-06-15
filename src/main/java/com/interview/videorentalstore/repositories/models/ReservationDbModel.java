@@ -2,6 +2,7 @@ package com.interview.videorentalstore.repositories.models;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +14,8 @@ public class ReservationDbModel {
 
     @Id
     @GeneratedValue
-    private Integer id;
-    private Integer filmId;
+    private UUID id;
+    private UUID filmId;
     private String status;
     private Integer reservationDays;
     private Instant reservationStartDate;
@@ -26,19 +27,31 @@ public class ReservationDbModel {
     public ReservationDbModel() {
     }
 
-    public Integer getId() {
+    public ReservationDbModel(UUID id, UUID filmId, String status, Integer reservationDays, Instant reservationStartDate, Double cost, Instant expectedReturnDate, Instant actualReturnDate, Double surcharge) {
+        this.id = id;
+        this.filmId = filmId;
+        this.status = status;
+        this.reservationDays = reservationDays;
+        this.reservationStartDate = reservationStartDate;
+        this.cost = cost;
+        this.expectedReturnDate = expectedReturnDate;
+        this.actualReturnDate = actualReturnDate;
+        this.surcharge = surcharge;
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Integer getFilmId() {
+    public UUID getFilmId() {
         return filmId;
     }
 
-    public void setFilmId(Integer filmId) {
+    public void setFilmId(UUID filmId) {
         this.filmId = filmId;
     }
 
