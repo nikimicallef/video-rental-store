@@ -1,0 +1,239 @@
+openapi: "3.0.3"
+info:
+  title: Video Rental API
+  version: "1.0.0"
+
+paths:
+  /films:
+    get:
+      description: "List of all films available in the system"
+      parameters:
+        - in: query
+          name: filmType
+          required: false
+          schema:
+            type: string
+            enum: ["NEW_RELEASE", "REGULAR", "OLD"]
+        - in: query
+          name: available
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: "List of all films"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Film"
+        "500":
+          $ref: "#/components/schemas/Error"
+
+  /films/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          example: 123456789
+    get:
+      description: "Get the details of a particular film using the film ID."
+      responses:
+        "200":
+          description: "Returns the details of a film."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Film"
+        "404":
+          $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/schemas/Error"
+
+  /reservations:
+    post:
+      description: "Creates a reservation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+            example: { "filmId": "12345", "reservationDays": 5 }
+      responses:
+        "201":
+          description: "Reservation created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+              example:
+                {
+                  "id": "987654",
+                  "filmId": "12345",
+                  "status": "OPEN",
+                  "reservationDays": 5,
+                  "reservationStartDate": "2017-07-21",
+                  "cost": 30.00,
+                  "expectedReturnDate": "2017-07-26",
+                }
+        "400":
+          $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/schemas/Error"
+
+  /reservations/{id}/action/return:
+    parameters:
+      - in: path
+        description: "Reservation id"
+        name: id
+        required: true
+        schema:
+          type: integer
+          example: 12345
+    post:
+      description: "Returns a reserved film"
+      responses:
+        "200":
+          description: "Film has been returned and reservation has been closed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+              examples:
+                ReturnedOnExpectedDate:
+                  value:
+                    {
+                      "id": "987654",
+                      "filmId": "12345",
+                      "status": "CLOSED",
+                      "reservationDays": 5,
+                      "reservationStartDate": "2017-07-21",
+                      "expectedReturnDate": "2017-07-26",
+                      "cost": 30.00,
+                      "actualReturnDate": "2017-07-26",
+                      "surcharge": 0.00,
+                    }
+                ReturnedAfterExpectedDate:
+                  value:
+                    {
+                      "id": "987654",
+                      "filmId": "12345",
+                      "status": "SURCHARGE_REQUIRED",
+                      "reservationDays": 5,
+                      "reservationStartDate": "2017-07-21",
+                      "expectedReturnDate": "2017-07-26",
+                      "cost": 30.00,
+                      "actualReturnDate": "2017-07-27",
+                      "surcharge": 10.00,
+                    }
+        "400":
+          $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Film:
+      type: object
+      description: "Represents a film"
+      required:
+        - id
+        - name
+        - filmType
+        - available
+      properties:
+        id:
+          description: "Unique entity ID."
+          type: integer
+          readOnly: true
+          example: 123456789
+        name:
+          description: "The film name"
+          type: string
+          example: "Matrix 11"
+        filmType:
+          description: "The film type, which will have an effect on the film pricing."
+          type: string
+          enum: ["NEW_RELEASE", "REGULAR", "OLD"]
+        available:
+          description: "Determines whether the film is available or not"
+          type: boolean
+
+    Reservation:
+      type: object
+      description: "Represents a film reservation"
+      required:
+        - filmId
+        - reservationDays
+      properties:
+        id:
+          description: "Unique entity ID."
+          type: integer
+          readOnly: true
+          example: 123456789
+        filmId:
+          description: "The ID of the film reserved."
+          type: integer
+          example: 123456789
+        status:
+          description: "Determines whether the reservation is still open (i.e. film not returned) or no"
+          type: string
+          readOnly: true
+          enum: ["OPEN", "CLOSED", "SURCHARGE_REQUIRED"]
+        reservationDays:
+          description: "Amount of days that the film is reserved for"
+          type: integer
+          example: 5
+        reservationStartDate:
+          description: "Day of when the reservation has been created."
+          type: string
+          format: date
+          readOnly: true
+          example: "2017-07-21"
+        cost:
+          description: "The cost of the reservation for the number of days specified"
+          type: number
+          format: double
+          readOnly: true
+          example: "30.00"
+        expectedReturnDate:
+          description: "Expected day of when the film needs to be returned"
+          type: string
+          format: date
+          readOnly: true
+          example: "2017-07-26"
+        actualReturnDate:
+          description: "Actual date that the film has been returned. This field is non-null if the "
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          example: "2017-07-26"
+        surcharge:
+          description: "The amount to be paid over and above the cost. This value is only non null and non zero if the film has been returned after the expected return date."
+          type: number
+          format: double
+          readOnly: true
+          nullable: true
+          example: 10.00
+
+    Error:
+      type: object
+      description: "Represents an error/problem encountered by the server."
+      required:
+        - message
+        - validationErrors
+      properties:
+        message:
+          description: "A description of the error encountered by the server"
+          type: string
+          example: "The entity specified has not been found"
+        validationErrors:
+          description: "A list of one or more validation errors due to possible incorrect data within the request"
+          type: array
+          items:
+            type: string
+            example: "The id field should not be specified within this request"
