@@ -20,13 +20,13 @@ public class FilmDbModel {
     @Column(name = "id", columnDefinition = "VARCHAR(255)")
     private UUID id;
     private String name;
-    private String filmType;
+    private FilmTypeDbEnum filmType;
     private Boolean available;
 
     public FilmDbModel() {
     }
 
-    public FilmDbModel(UUID id, String name, String filmType, Boolean available) {
+    public FilmDbModel(UUID id, String name, FilmTypeDbEnum filmType, Boolean available) {
         this.id = id;
         this.name = name;
         this.filmType = filmType;
@@ -49,11 +49,11 @@ public class FilmDbModel {
         this.name = name;
     }
 
-    public String getFilmType() {
+    public FilmTypeDbEnum getFilmType() {
         return filmType;
     }
 
-    public void setFilmType(String filmType) {
+    public void setFilmType(FilmTypeDbEnum filmType) {
         this.filmType = filmType;
     }
 

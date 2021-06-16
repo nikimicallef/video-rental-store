@@ -19,9 +19,9 @@ import com.interview.videorentalstore.repositories.models.FilmDbModel;
 @Service
 public class FilmsService {
 
-    private final FilmsRepository repo;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(FilmsService.class);
+
+    private final FilmsRepository repo;
 
     public FilmsService(FilmsRepository repo) {
         this.repo = repo;
@@ -57,6 +57,52 @@ public class FilmsService {
     public Film getFilm(final String id) {
         LOGGER.debug("Entered GET entity service method with id {}", id);
 
+        final FilmDbModel filmDbModel = getFilmDbModel(id);
+
+        return FilmsMapper.convertToApiModel(filmDbModel);
+    }
+
+    /**
+     * Changes the availability of a film with a given id.
+     * The method is NOT idempotent, i.e. if the desired availability status is equal to the current availability status then it will throw an {@link IllegalArgumentException}
+     *
+     * @param filmId       of the Film whose availability will be changed
+     * @param availability the new availability
+     * @return the updated Film model
+     */
+    public Film changeFilmAvailability(final String filmId, final boolean availability) {
+        final FilmDbModel film = getFilmDbModel(filmId);
+
+        if (availability == film.getAvailable()) {
+            throw new IllegalArgumentException("Film with ID " + filmId + " is already set to available.");
+        }
+
+        film.setAvailable(availability);
+        final FilmDbModel returnedFilm = repo.save(film);
+
+        return FilmsMapper.convertToApiModel(returnedFilm);
+    }
+
+    /**
+     * Validates that the film type inputted in the API is valid. If not throws an {@link IncorrectRequestException}
+     *
+     * @param inputtedFilmType passed in by the user
+     */
+    private void validateQueryParams(final String inputtedFilmType) {
+        try {
+            Film.FilmTypeEnum.fromValue(inputtedFilmType);
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectRequestException("Incorrect data sent in the request URI", List.of("Film type " + inputtedFilmType + " does not exist."));
+        }
+    }
+
+    /**
+     * Returns a film with the given id. Throws {@link EntityNotFoundException} otherwise
+     *
+     * @param id of the film to retrieve
+     * @return film with the provided id
+     */
+    private FilmDbModel getFilmDbModel(final String id) {
         final UUID uuid;
 
         try {
@@ -65,17 +111,7 @@ public class FilmsService {
             throw new EntityNotFoundException();
         }
 
-        final FilmDbModel filmDbModel = repo.findById(uuid).orElseThrow(EntityNotFoundException::new);
-
-        return FilmsMapper.convertToApiModel(filmDbModel);
-    }
-
-    private void validateQueryParams(final String inputtedFilmType) {
-        try {
-            Film.FilmTypeEnum.fromValue(inputtedFilmType);
-        } catch (IllegalArgumentException e) {
-            throw new IncorrectRequestException("Incorrect data sent in the request URI", List.of("Film type " + inputtedFilmType + " does not exist."));
-        }
+        return repo.findById(uuid).orElseThrow(EntityNotFoundException::new);
     }
 
 }

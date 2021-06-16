@@ -16,7 +16,7 @@ public class ReservationDbModel {
     @GeneratedValue
     private UUID id;
     private UUID filmId;
-    private String status;
+    private ReservationStatusDbEnum status;
     private Integer reservationDays;
     private Instant reservationStartDate;
     private Double cost;
@@ -27,7 +27,7 @@ public class ReservationDbModel {
     public ReservationDbModel() {
     }
 
-    public ReservationDbModel(UUID id, UUID filmId, String status, Integer reservationDays, Instant reservationStartDate, Double cost, Instant expectedReturnDate, Instant actualReturnDate, Double surcharge) {
+    public ReservationDbModel(UUID id, UUID filmId, ReservationStatusDbEnum status, Integer reservationDays, Instant reservationStartDate, Double cost, Instant expectedReturnDate, Instant actualReturnDate, Double surcharge) {
         this.id = id;
         this.filmId = filmId;
         this.status = status;
@@ -55,11 +55,11 @@ public class ReservationDbModel {
         this.filmId = filmId;
     }
 
-    public String getStatus() {
+    public ReservationStatusDbEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReservationStatusDbEnum status) {
         this.status = status;
     }
 

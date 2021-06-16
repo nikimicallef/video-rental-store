@@ -13,7 +13,7 @@ paths:
           required: false
           schema:
             type: string
-            enum: ["NEW_RELEASE", "REGULAR", "OLD"]
+            enum: [ "NEW_RELEASE", "REGULAR", "OLD" ]
         - in: query
           name: available
           required: false
@@ -54,6 +54,19 @@ paths:
           $ref: "#/components/schemas/Error"
 
   /reservations:
+    get:
+      description: "List of all reservations in the system"
+      responses:
+        "200":
+          description: "List of all reservations"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+        "500":
+          $ref: "#/components/schemas/Error"
     post:
       description: "Creates a reservation"
       requestBody:
@@ -88,15 +101,15 @@ paths:
         "500":
           $ref: "#/components/schemas/Error"
 
-  /reservations/{id}/action/return:
+  /reservations/{id}/actions/return:
     parameters:
       - in: path
         description: "Reservation id"
         name: id
         required: true
         schema:
-          type: integer
-          example: 12345
+          type: string
+          example: 11841bdbe53e43bca404d7431afc72d1
     post:
       description: "Returns a reserved film"
       responses:
@@ -161,7 +174,7 @@ components:
         filmType:
           description: "The film type, which will have an effect on the film pricing."
           type: string
-          enum: ["NEW_RELEASE", "REGULAR", "OLD"]
+          enum: [ "NEW_RELEASE", "REGULAR", "OLD" ]
         available:
           description: "Determines whether the film is available or not"
           type: boolean
@@ -186,10 +199,11 @@ components:
           description: "Determines whether the reservation is still open (i.e. film not returned) or no"
           type: string
           readOnly: true
-          enum: ["OPEN", "CLOSED", "SURCHARGE_REQUIRED"]
+          enum: [ "OPEN", "CLOSED", "SURCHARGE_REQUIRED" ]
         reservationDays:
           description: "Amount of days that the film is reserved for"
           type: integer
+          minimum: 1
           example: 5
         reservationStartDate:
           description: "Day of when the reservation has been created."
@@ -214,14 +228,12 @@ components:
           type: string
           format: date
           readOnly: true
-          nullable: true
           example: "2017-07-26"
         surcharge:
           description: "The amount to be paid over and above the cost. This value is only non null and non zero if the film has been returned after the expected return date."
           type: number
           format: double
           readOnly: true
-          nullable: true
           example: 10.00
 
     Error:

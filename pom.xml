@@ -120,6 +120,7 @@
 							<generatorName>spring</generatorName>
 							<configOptions>
 								<sourceFolder>src/gen/java/main</sourceFolder>
+								<dateLibrary>java8</dateLibrary>
 							</configOptions>
 						</configuration>
 					</execution>

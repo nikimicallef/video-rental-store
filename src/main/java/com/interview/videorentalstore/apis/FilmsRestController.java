@@ -43,6 +43,8 @@ public class FilmsRestController
 
         final Film retrievedFilm = service.getFilm(id);
 
+        LOGGER.info("Returned film with id {}" + id);
+
         return ResponseEntity.ok(retrievedFilm);
     }
 }
