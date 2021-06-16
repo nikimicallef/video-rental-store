@@ -3,7 +3,7 @@ package com.interview.videorentalstore.repositories;
 import java.time.Instant;
 import java.time.Period;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openapitools.model.Film;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -13,24 +13,27 @@ import com.interview.videorentalstore.repositories.models.ReservationDbModel;
 
 
 @Component
-public class DataBoarding implements ApplicationListener<ApplicationReadyEvent> {
+public class DataBoarding
+        implements ApplicationListener<ApplicationReadyEvent> {
 
-    @Autowired
-    private FilmsRepository filmsRepository;
+    private final FilmsRepository filmsRepository;
 
-    @Autowired
-    private ReservationsRepository reservationsRepository;
+    private final ReservationsRepository reservationsRepository;
+
+    public DataBoarding(FilmsRepository filmsRepository, ReservationsRepository reservationsRepository) {
+        this.filmsRepository = filmsRepository;
+        this.reservationsRepository = reservationsRepository;
+    }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        // TODO: filmType enum
-        final FilmDbModel matrix = filmsRepository.save(new FilmDbModel(null, "Matrix 11", "NEW_RELEASE", false));
-        filmsRepository.save(new FilmDbModel(null, "Spider Man", "REGULAR", true));
-        filmsRepository.save(new FilmDbModel(null, "Spider Man 2", "REGULAR", true));
-        final FilmDbModel outOfAfrica = filmsRepository.save(new FilmDbModel(null, "Out of Africa", "OLD", false));
-        filmsRepository.save(new FilmDbModel(null, "The Godfather", "OLD", true));
-        filmsRepository.save(new FilmDbModel(null, "Tom and Jerry", "NEW_RELEASE", true));
-        filmsRepository.save(new FilmDbModel(null, "The Avengers", "REGULAR", true));
+        final FilmDbModel matrix = filmsRepository.save(new FilmDbModel(null, "Matrix 11", Film.FilmTypeEnum.NEW_RELEASE.name(), false));
+        filmsRepository.save(new FilmDbModel(null, "Spider Man", Film.FilmTypeEnum.REGULAR.name(), true));
+        filmsRepository.save(new FilmDbModel(null, "Spider Man 2", Film.FilmTypeEnum.REGULAR.name(), true));
+        final FilmDbModel outOfAfrica = filmsRepository.save(new FilmDbModel(null, "Out of Africa", Film.FilmTypeEnum.OLD.name(), false));
+        filmsRepository.save(new FilmDbModel(null, "The Godfather", Film.FilmTypeEnum.OLD.name(), true));
+        filmsRepository.save(new FilmDbModel(null, "Tom and Jerry", Film.FilmTypeEnum.NEW_RELEASE.name(), true));
+        filmsRepository.save(new FilmDbModel(null, "The Avengers", Film.FilmTypeEnum.REGULAR.name(), true));
 
         // TODO: Status enum and cost
         final Instant matrixReservationDate = Instant.now().minus(Period.ofDays(3));

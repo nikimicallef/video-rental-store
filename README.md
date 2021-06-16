@@ -4,6 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Design Decisions
 - No bulk rental; only single rental
+- No TOs. Not necessary
 
 ### Assumptions
 - There is only one of each film available. If it's reserved then it is not possible for another person to rent that film.
