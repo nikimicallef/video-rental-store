@@ -23,7 +23,7 @@ public class ReservationsMapper {
         apiModel.setId(dbModel.getId().toString());
         apiModel.setFilmId(dbModel.getFilmId().toString());
 
-        final Reservation.StatusEnum reservationStatusEnum = convertToApiModelEnum(dbModel.getStatus());
+        final Reservation.StatusEnum reservationStatusEnum = convertDbReservationStatusToApiEnum(dbModel.getStatus());
         apiModel.setStatus(reservationStatusEnum);
 
         apiModel.setReservationDays(dbModel.getReservationDays());
@@ -46,7 +46,7 @@ public class ReservationsMapper {
      * @param dbEnum to convert
      * @return equivalent API enum
      */
-    public static Reservation.StatusEnum convertToApiModelEnum(final ReservationStatusDbEnum dbEnum) {
+    public static Reservation.StatusEnum convertDbReservationStatusToApiEnum(final ReservationStatusDbEnum dbEnum) {
         switch (dbEnum) {
             case OPEN:
                 return Reservation.StatusEnum.OPEN;

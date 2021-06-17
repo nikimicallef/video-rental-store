@@ -12,7 +12,7 @@ import com.interview.videorentalstore.repositories.models.FilmDbModel;
 import com.interview.videorentalstore.repositories.models.FilmTypeDbEnum;
 import com.interview.videorentalstore.repositories.models.ReservationDbModel;
 import com.interview.videorentalstore.repositories.models.ReservationStatusDbEnum;
-import com.interview.videorentalstore.utils.ReservationCostUtils;
+import com.interview.videorentalstore.utils.ReservationsCostUtils;
 
 
 @Component
@@ -47,7 +47,7 @@ public class DataBoarding
                 ReservationStatusDbEnum.OPEN,
                 matrixReservationDays,
                 matrixReservationDate,
-                ReservationCostUtils.calculateReservationCost(FilmsMapper.convertToApiModelEnum(matrix.getFilmType()), matrixReservationDays),
+                ReservationsCostUtils.calculateReservationCost(FilmsMapper.convertDbFilmTypeToApiEnum(matrix.getFilmType()), matrixReservationDays),
                 matrixReservationDate.plus(Period.ofDays(matrixReservationDays)),
                 null,
                 null));
@@ -59,7 +59,7 @@ public class DataBoarding
                 ReservationStatusDbEnum.OPEN,
                 outOfAfricaReservationDays,
                 outOfAfricaReservationDate,
-                ReservationCostUtils.calculateReservationCost(FilmsMapper.convertToApiModelEnum(outOfAfrica.getFilmType()), outOfAfricaReservationDays),
+                ReservationsCostUtils.calculateReservationCost(FilmsMapper.convertDbFilmTypeToApiEnum(outOfAfrica.getFilmType()), outOfAfricaReservationDays),
                 outOfAfricaReservationDate.plus(Period.ofDays(outOfAfricaReservationDays)),
                 null,
                 null));

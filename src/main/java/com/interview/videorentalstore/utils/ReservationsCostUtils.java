@@ -3,7 +3,7 @@ package com.interview.videorentalstore.utils;
 import org.openapitools.model.Film;
 
 
-public class ReservationCostUtils {
+public class ReservationsCostUtils {
 
     private static final Double PREMIUM_PRICE = 40.00;
     private static final Double BASIC_PRICE = 30.00;

@@ -22,7 +22,7 @@ import com.interview.videorentalstore.mappers.ReservationsMapper;
 import com.interview.videorentalstore.repositories.ReservationsRepository;
 import com.interview.videorentalstore.repositories.models.ReservationDbModel;
 import com.interview.videorentalstore.repositories.models.ReservationStatusDbEnum;
-import com.interview.videorentalstore.utils.ReservationCostUtils;
+import com.interview.videorentalstore.utils.ReservationsCostUtils;
 
 
 @Service
@@ -49,15 +49,17 @@ public class ReservationsService {
         validateCreateInput(reservation);
 
         final Film film = filmsService.getFilm(reservation.getFilmId());
-        final Double cost = ReservationCostUtils.calculateReservationCost(film.getFilmType(), reservation.getReservationDays());
+        final Double cost = ReservationsCostUtils.calculateReservationCost(film.getFilmType(), reservation.getReservationDays());
+
+        final Instant reservationStartDate = Instant.now();
 
         final ReservationDbModel reservationToAdd = new ReservationDbModel(null,
                 UUID.fromString(reservation.getFilmId()),
                 ReservationStatusDbEnum.OPEN,
                 reservation.getReservationDays(),
-                Instant.now(),
+                reservationStartDate,
                 cost,
-                Instant.now().plus(Period.ofDays(reservation.getReservationDays())),
+                reservationStartDate.plus(Period.ofDays(reservation.getReservationDays())),
                 null,
                 null);
 
@@ -134,7 +136,7 @@ public class ReservationsService {
         } else {
             // Returned film late. Calculating surcharge
             final int surchargeDelta = daysBetweenReservationDateAndActualReturnDate - reservationDays;
-            return ReservationCostUtils.calculateSurchargeCost(filmType, surchargeDelta);
+            return ReservationsCostUtils.calculateSurchargeCost(filmType, surchargeDelta);
         }
     }
 

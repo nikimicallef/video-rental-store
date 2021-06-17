@@ -20,7 +20,7 @@ public class FilmsMapper {
         apiModel.setId(dbModel.getId().toString());
         apiModel.setName(dbModel.getName());
 
-        final Film.FilmTypeEnum filmTypeEnum = convertToApiModelEnum(dbModel.getFilmType());
+        final Film.FilmTypeEnum filmTypeEnum = convertDbFilmTypeToApiEnum(dbModel.getFilmType());
         apiModel.setFilmType(filmTypeEnum);
 
         apiModel.setAvailable(dbModel.getAvailable());
@@ -34,7 +34,7 @@ public class FilmsMapper {
      * @param dbEnum to convert
      * @return equivalent API enum
      */
-    public static Film.FilmTypeEnum convertToApiModelEnum(final FilmTypeDbEnum dbEnum) {
+    public static Film.FilmTypeEnum convertDbFilmTypeToApiEnum(final FilmTypeDbEnum dbEnum) {
         switch (dbEnum) {
             case NEW_RELEASE:
                 return Film.FilmTypeEnum.NEW_RELEASE;
