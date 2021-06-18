@@ -39,7 +39,7 @@ The following process may be used to run the application;
 1. Build the docker image using the `docker build --tag videorental .` command.
 1. Run the docker image using the `docker run -p 8080:8080 -d --name videorental videorental` command.
     1. You can send API requests on port 8080.
-    1. The H2 console can be accessed via the `http://localhost:8080/h2-console` URL. The username is `sa` with no password.
+    1. The H2 console can be accessed via the `http://localhost:8080/h2-console` URL. The JDBC URL is `jdbc:h2:mem:testdb`, the username is `sa` with no password.
 1. You can stop running the application using the `docker stop videorental` command. Once the image is stopped, all data within the H2 database will be wiped out.
 1. You can delete the container using the `docker rm videorental` command.
 1. You can delete the original image using the `docker rmi videorental` command.
